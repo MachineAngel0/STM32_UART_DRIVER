@@ -98,6 +98,10 @@ int main(void)
 
   /* Infinite loop */
   /* USER CODE BEGIN WHILE */
+  LL_GPIO_TogglePin(GPIOA, LL_GPIO_PIN_5);
+
+  uint8_t uart_buffer[] = "I AM Ballin\n\r";
+  uint8_t uart_buffer_size = sizeof(uart_buffer) / sizeof(uart_buffer[0]);
   while (1)
   {
     /* USER CODE END WHILE */
@@ -108,8 +112,13 @@ int main(void)
     // LL_USART_TransmitData8();
     // LL_USART_ReceiveData8();
 
-    LL_USART_TransmitData8();
+    // Send USART buffer
+    for (int i = 0; i < uart_buffer_size; i++) {
+      while (!LL_USART_IsActiveFlag_TXE(USART2)) {};
+      LL_USART_TransmitData8(USART2, uart_buffer[i]);
+    }
 
+    LL_mDelay(1000);
 
 
   }
@@ -204,9 +213,9 @@ static void MX_USART2_UART_Init(void)
   USART_InitStruct.DataWidth = LL_USART_DATAWIDTH_8B;
   USART_InitStruct.StopBits = LL_USART_STOPBITS_1;
   USART_InitStruct.Parity = LL_USART_PARITY_NONE;
-  USART_InitStruct.TransferDirection = LL_USART_DIRECTION_TX_RX;
+  USART_InitStruct.TransferDirection = LL_USART_DIRECTION_TX;
   USART_InitStruct.HardwareFlowControl = LL_USART_HWCONTROL_NONE;
-  USART_InitStruct.OverSampling = LL_USART_OVERSAMPLING_16;
+  USART_InitStruct.OverSampling = LL_USART_OVERSAMPLING_8;
   LL_USART_Init(USART2, &USART_InitStruct);
   LL_USART_ConfigAsyncMode(USART2);
   LL_USART_Enable(USART2);
