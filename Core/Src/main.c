@@ -90,6 +90,10 @@ int main(void)
             uint8_t temp = 1;
             USART2_Baremetal_Write(uart_read_buffer, &temp);
 
+        }else
+        {
+            USART2_Baremetal_Write(uart_buffer, &uart_buffer_size);
+
         }
 
 
